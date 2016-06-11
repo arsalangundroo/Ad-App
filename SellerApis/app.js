@@ -14,7 +14,6 @@ var app = express();
 //Todo: Set the DB details in config file
 var dbName = 'advertisementDB';
 var connectionString = 'mongodb://localhost:27017/' + dbName;
-
 mongoose.connect(connectionString);
 
 // view engine setup
