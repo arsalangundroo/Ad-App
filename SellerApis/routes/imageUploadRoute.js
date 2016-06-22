@@ -1,6 +1,6 @@
 var express = require('express');
 var router=express.Router();
-router.route('/adImages').post(addImages);
+router.route('/upload').post(addImages);
 
 var multer  = require('multer');
 var storage = multer.diskStorage({
@@ -11,7 +11,7 @@ var storage = multer.diskStorage({
     callback(null, file.fieldname + '-' + Date.now());
   }
 });
-var upload = multer({ storage : storage}).array('adImage',10);
+var upload = multer({ storage : storage}).array('adImages',10);
 
 
 function addImages(req,res){

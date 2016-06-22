@@ -8,6 +8,7 @@ var mongoose  = require('mongoose');
 var defaultRoutes = require('./routes/index');
 var users = require('./routes/users');
 var advertisementRoutes = require('./routes/advertisementRoutes.js');
+var imageUploadRoute = require('./routes/imageUploadRoute.js');
 var app = express();
 
 //DB Setup
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', defaultRoutes);
 app.use('/users', users);
 app.use('/advertisements',advertisementRoutes);
+app.use('/adImages',imageUploadRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
