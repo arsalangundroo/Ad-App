@@ -6,6 +6,8 @@ var router = express.Router();
 router.route('/create').post(createAd);
 router.route('/list').get(getAdsForAccount);
 router.route('/:id/get').get(getAdById);
+router.route('/:id/delete').delete(deleteAd);
+router.route('/:id/update').post(updateAd);
 
 var accountId = '575d4191401ebb033ab1fba9';
 
@@ -44,6 +46,28 @@ function getAdById(req, res, next){
 	when(controller.getAdById(req.params.id, options),
 		function success(advertisement) {
 			res.send(advertisement);
+		},
+		function error(err) {
+			res.send(err);
+		});
+}
+
+function deleteAd(req, res, next){
+	var options = {};
+	when(controller.deleteAd(req.params.id, options),
+		function success(result) {
+			res.send(result);
+		},
+		function error(err) {
+			res.send(err);
+		});
+}
+
+function updateAd(req, res, next){
+    var options = {};
+	when(controller.updateAd(req.params.id, req.body, options),
+		function success(updatedAdvertisement) {
+			res.send(updatedAdvertisement);
 		},
 		function error(err) {
 			res.send(err);

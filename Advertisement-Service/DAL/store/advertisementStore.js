@@ -68,6 +68,50 @@ function getAdById(id, options) {
 	return promise;
 }
 
+function deleteAd(advertisementId, options) {
+	var promise = new Promise(
+		function(resolve, reject) {
+			Advertisement.remove({
+				_id: advertisementId
+			}, function(err) {
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			});
+		});
+	return promise;
+}
+
+function updateAd(advertisementId, updateParamsOb, options) {
+	var query = {
+		_id: advertisementId
+	};
+	var options = {
+		new: true
+	};
+	var promise = new Promise(
+		function(resolve, reject) {
+			Advertisement.findByIdAndUpdate(advertisementId,updateParamsOb,options,
+				function(err, updatedAd){
+                if(err){
+                	reject(err);
+                }else{
+                	if (updatedAd === null) {
+						var error = {};
+						error.error_message = "No advertisement found for the provided Id";
+						reject(error);
+					} else {
+						resolve(updatedAd);
+					}
+                }
+			});	
+		});
+
+	return promise;
+}
+
 function getAdvertisementDBOb(accountId, advertisementRequestOb) {
 	var advertisement = new Advertisement();
 	try {
@@ -85,6 +129,26 @@ function getAdvertisementDBOb(accountId, advertisementRequestOb) {
 	return advertisement;
 }
 
+// function modifyAd(advertisement,updateParams){
+// 	console.log(updateParams);
+// 	if(updateParams.item_name){
+// 		advertisement.item_name=updateParams.item_name;
+// 	}
+// 	if(updateParams.price){
+// 		advertisement.price=updateParams.price;
+// 	}
+// 	if(updateParams.deal){
+//         advertisement.deal = updateParams.deal;
+// 	}
+// 	if(updateParams.discount){
+// 		advertisement.discount =updateParams.discount;
+// 	}
+// 	//console.log(advertisement);
+// 	return advertisement;
+// }
+
 exports.createAd = createAd;
 exports.getAdsForAccount = getAdsForAccount;
 exports.getAdById = getAdById;
+exports.deleteAd = deleteAd;
+exports.updateAd = updateAd;
