@@ -1,6 +1,6 @@
 var express = require('express');
 var when = require('when');
-var controller = require('../controller/advertisementController.js');
+var controller = require('../controller/sellerController.js');
 var router = express.Router();
 
 router.route('/create').post(createAd);

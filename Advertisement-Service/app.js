@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 var mongoose  = require('mongoose');
 var defaultRoutes = require('./routes/index');
 var users = require('./routes/users');
-var advertisementRoutes = require('./routes/advertisementRoutes.js');
+var sellerRoutes = require('./routes/sellerRoutes.js');
+var customerRoutes = require('./routes/customerRoutes.js');
 var imageUploadRoute = require('./routes/imageUploadRoute.js');
 var app = express();
 
@@ -31,7 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', defaultRoutes);
 app.use('/users', users);
-app.use('/advertisements',advertisementRoutes);
+app.use('/seller',sellerRoutes);
+app.use('/customer',customerRoutes);
 app.use('/adImages',imageUploadRoute);
 
 // catch 404 and forward to error handler

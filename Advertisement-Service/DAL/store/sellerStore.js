@@ -27,7 +27,7 @@ function getAdsForAccount(accountId, options) {
 	}
 	var promise = new Promise(
 		function(resolve, reject) {
-			Advertisement.paginate({}, {
+			Advertisement.paginate({accountId:accountId}, {
 				page: pageNumber,
 				limit: pageSize
 			}, function(err, result) {

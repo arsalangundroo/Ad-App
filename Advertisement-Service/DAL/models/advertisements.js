@@ -4,13 +4,14 @@ var Schema =mongoose.Schema;
 var advertisementSchema =new  Schema({
 	accountId : Schema.ObjectId,   // Check for correct type of objectId.
 	item_name : String,
+	description : String,
 	price : Number,
 	//currency : String,
     deal: {type: String, default: 'No_Deal'},
     discount :{type: Number,default: 0},
-  //  available_quantity: Number,
     create_date : {type:Date, default:Date.now},
-    image_url: String
+    image_url: String,
+    is_available: {type: Boolean , default: true}
 });
 advertisementSchema.plugin(mongoosePaginate);
 

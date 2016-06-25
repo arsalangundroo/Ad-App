@@ -1,4 +1,4 @@
-var advertisementStore = require('../DAL/store/advertisementStore.js');
+var advertisementStore = require('../DAL/store/sellerStore.js');
 
 function cretaeAd(accountId, advertisementRequestOb, options) {
 
