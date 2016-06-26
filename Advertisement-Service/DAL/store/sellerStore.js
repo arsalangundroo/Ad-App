@@ -1,7 +1,4 @@
 var Advertisement = require('../models/advertisements.js');
-var events = require('events');
-var eventEmitter = new events.EventEmitter();
-var notificationGenerator = require('../../notification/notificationGenerator.js');
 
 function createAd(accountId, advertisementRequestOb, options) {
 	advertisementDBObject = getAdvertisementDBOb(accountId, advertisementRequestOb);
@@ -9,7 +6,6 @@ function createAd(accountId, advertisementRequestOb, options) {
 		function(resolve, reject) {
 			advertisementDBObject.save()
 				.then(function successSave(savedAdvertisement) {
-					    eventEmitter.emit('adUploaded',accountId,savedAdvertisement._id);
 						resolve(savedAdvertisement);
 					},
 					function errorSave(err) {
@@ -137,10 +133,6 @@ function getAdvertisementDBOb(accountId, advertisementRequestOb) {
 	}
 	return advertisement;
 }
-
-
-
-eventEmitter.on('adUploaded', notificationGenerator.generateNotificationForNewUpload);
 
 // function modifyAd(advertisement,updateParams){
 // 	console.log(updateParams);

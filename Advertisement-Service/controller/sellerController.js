@@ -1,11 +1,15 @@
 var advertisementStore = require('../DAL/store/sellerStore.js');
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+var notificationGenerator = require('../notification/notificationGenerator.js');
 
 function cretaeAd(accountId, advertisementRequestOb, options) {
 
 	var promise = new Promise(
 		function(resolve, reject) {
-			function successCreate(advertisement) {
-				resolve(advertisement);
+			function successCreate(savedAdvertisement) {
+				resolve(savedAdvertisement);
+				eventEmitter.emit('adUploaded',accountId,savedAdvertisement._id);
 			}
 
 			function errorCreate(err) {
@@ -75,6 +79,8 @@ function updateAd(id, updateParamsOb, options) {
 		});
 	return promise;
 }
+
+eventEmitter.on('adUploaded', notificationGenerator.generateNotificationForNewUpload);
 
 exports.createAd = cretaeAd;
 exports.getAdsForAccount = getAdsForAccount;
