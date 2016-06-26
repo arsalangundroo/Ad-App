@@ -1,4 +1,7 @@
 var Advertisement = require('../models/advertisements.js');
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+var notificationGenerator = require('../../notification/notificationGenerator.js');
 
 function createAd(accountId, advertisementRequestOb, options) {
 	advertisementDBObject = getAdvertisementDBOb(accountId, advertisementRequestOb);
@@ -6,6 +9,7 @@ function createAd(accountId, advertisementRequestOb, options) {
 		function(resolve, reject) {
 			advertisementDBObject.save()
 				.then(function successSave(savedAdvertisement) {
+					    eventEmitter.emit('adUploaded',accountId,savedAdvertisement._id);
 						resolve(savedAdvertisement);
 					},
 					function errorSave(err) {
@@ -27,7 +31,9 @@ function getAdsForAccount(accountId, options) {
 	}
 	var promise = new Promise(
 		function(resolve, reject) {
-			Advertisement.paginate({accountId:accountId}, {
+			Advertisement.paginate({
+				accountId: accountId
+			}, {
 				page: pageNumber,
 				limit: pageSize
 			}, function(err, result) {
@@ -93,22 +99,21 @@ function updateAd(advertisementId, updateParamsOb, options) {
 	};
 	var promise = new Promise(
 		function(resolve, reject) {
-			Advertisement.findByIdAndUpdate(advertisementId,updateParamsOb,options,
-				function(err, updatedAd){
-                if(err){
-                	reject(err);
-                }else{
-                	if (updatedAd === null) {
-						var error = {};
-						error.error_message = "No advertisement found for the provided Id";
-						reject(error);
+			Advertisement.findByIdAndUpdate(advertisementId, updateParamsOb, options,
+				function(err, updatedAd) {
+					if (err) {
+						reject(err);
 					} else {
-						resolve(updatedAd);
+						if (updatedAd === null) {
+							var error = {};
+							error.error_message = "No advertisement found for the provided Id";
+							reject(error);
+						} else {
+							resolve(updatedAd);
+						}
 					}
-                }
-			});	
+				});
 		});
-
 	return promise;
 }
 
@@ -117,17 +122,25 @@ function getAdvertisementDBOb(accountId, advertisementRequestOb) {
 	try {
 		advertisement.accountId = accountId;
 		advertisement.item_name = advertisementRequestOb.item_name;
+		advertisement.description = advertisementRequestOb.description;
+		advertisement.price = advertisementRequestOb.price;
 		advertisement.deal = advertisementRequestOb.deal;
 		advertisement.discount = advertisementRequestOb.discount;
-		//advertisement.available_quantity = advertisementRequestOb.available_quantity;
 		advertisement.create_date = new Date();
 		//TODO: get the image uri base path from configuration
 		advertisement.image_url = '/home/arsalan/Desktop/Ads-Images/' + accountId + '\/' + advertisement.item_name + '-' + advertisement.create_date;
+	    if(advertisementRequestOb.is_available!==null && advertisementRequestOb.is_available!==undefined){
+	    	advertisement.is_available = advertisementRequestOb.is_available;
+	    }
 	} catch (error) {
 		console.log(error);
 	}
 	return advertisement;
 }
+
+
+
+eventEmitter.on('adUploaded', notificationGenerator.generateNotificationForNewUpload);
 
 // function modifyAd(advertisement,updateParams){
 // 	console.log(updateParams);
