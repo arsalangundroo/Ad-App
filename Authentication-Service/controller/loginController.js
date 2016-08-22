@@ -1,5 +1,6 @@
 var authCredentialsStore = require('../DAL/store/authCredentialsStore.js');
 var jwt = require('jsonwebtoken');
+var config = require('../config.js');
 
 function authenticateUser(loginCredentials, options) {
 	//TODO: check if both login credentials are present.
@@ -22,9 +23,10 @@ function authenticateUser(loginCredentials, options) {
 }
 
 function buildAuthToken(tokenCredentials) {
-	var authToken = jwt.sign(tokenCredentials, app.get('token_encryption_key'), {
-		expiresInMinutes: 1440 // expires in 24 hours
-	});
+	console.log('bld tkn');
+	console.log(config.token_encryption_key);
+	var authToken = jwt.sign(tokenCredentials, config.token_encryption_key);
+	return authToken;
 }
 
 exports.authenticateUser = authenticateUser;
