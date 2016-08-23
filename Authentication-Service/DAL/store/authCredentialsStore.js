@@ -9,7 +9,7 @@ function getAuthCredentialsForLogin(loginCredentials, options) {
 					email: loginCredentials.email,
 					password: loginCredentials.password
 				},
-				'_id role',
+				'_id  email role',
 				function(err, credentials) {
 					if (err) {
 						reject(err);
@@ -25,4 +25,30 @@ function getAuthCredentialsForLogin(loginCredentials, options) {
 	return promise;
 }
 
+function checkTokenCredentialsInDB(tokenCredentials, options) {
+	var promise = new Promise(
+
+		function(resolve, reject) {
+			//TODO: use projection exclude password and create-date					
+			AuthCredentials.findOne({
+					_id: tokenCredentials._id,
+					email: tokenCredentials.email,
+					role: tokenCredentials.role
+				},
+				function(err, credentials) {
+					if (err) {
+						reject(err);
+					} else if (credentials) {
+						resolve(true);
+					} else {
+						reject({
+							message: 'Authentication Failed!!'
+						});
+					}
+				});
+		});
+	return promise;
+}
+
 exports.getAuthCredentialsForLogin = getAuthCredentialsForLogin;
+exports.checkTokenCredentialsInDB = checkTokenCredentialsInDB;
