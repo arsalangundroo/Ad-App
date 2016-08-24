@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var mongoose =require('mongoose');
 
 var loginRoutes = require('./routes/loginRoutes');
+var accessAuthRoutes = require('./routes/accessAuthRoutes');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var config = require('./config');
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/login',loginRoutes);
+app.use('/access_authentication',accessAuthRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
