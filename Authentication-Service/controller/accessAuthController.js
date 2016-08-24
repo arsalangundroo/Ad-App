@@ -2,11 +2,11 @@ var authCredentialsStore = require('../DAL/store/authCredentialsStore.js');
 var jwt = require('jsonwebtoken');
 var config = require('../config.js');
 
-function authenticateUser(userToken, options) {
+function authenticateUser(userToken, userRole, options) {
 	//TODO: check if both login credentials are present.
 	var promise = new Promise(
 		function(resolve, reject) {
-			
+
 			function successGet(authenticity) {
 				//TODO : Build token
 				resolve(authenticity);
@@ -20,7 +20,13 @@ function authenticateUser(userToken, options) {
 				if (err) {
 					reject(err);
 				} else {
-					authCredentialsStore.checkTokenCredentialsInDB(tokenCredentials).then(successGet, errorGet);
+					if (tokenCredentials.role !== userRole) {
+						reject({
+							message: 'User not authorized for this role'
+						});
+					} else {
+						authCredentialsStore.checkTokenCredentialsInDB(tokenCredentials).then(successGet, errorGet);
+					}
 				}
 			});
 		});

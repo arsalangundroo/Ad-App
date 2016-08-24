@@ -9,15 +9,19 @@ router.route('/').post(authenticateUser);
 function authenticateToken(req, res, next) {
 	// if(req.body)   TODO: verify if check is to be applied
 	var options = null;
-// req.body={token:token,role:'role' }
-	when(controller.authenticateUser(req.body, options),
+	// req.body={token:token,user_role:'role' }
+	when(controller.authenticateUser(req.body.token, req.body.user_role, options),
 		function success(authenticity) {
-			res.send({'authenticity':authenticity});
+			res.send({
+				'authenticity': authenticity
+			});
 		},
 		function error(err) {
-			res.send({'authenticity':false,additionalInfo:err});
+			res.send({
+				'authenticity': false,
+				additionalInfo: err
+			});
 		});
-}
 }
 
 module.exports = router;
