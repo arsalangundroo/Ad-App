@@ -7,9 +7,9 @@ function authenticateUser(userToken, userRole, options) {
 	var promise = new Promise(
 		function(resolve, reject) {
 
-			function successGet(authenticity) {
+			function successGet(authentication) {
 				//TODO : Build token
-				resolve(authenticity);
+				resolve(authentication);
 			}
 
 			function errorGet(err) {
@@ -20,12 +20,12 @@ function authenticateUser(userToken, userRole, options) {
 				if (err) {
 					reject(err);
 				} else {
-					if (tokenCredentials.role !== userRole) {
+					if (tokenCredentials._doc.role !== userRole) {
 						reject({
 							message: 'User not authorized for this role'
 						});
 					} else {
-						authCredentialsStore.checkTokenCredentialsInDB(tokenCredentials).then(successGet, errorGet);
+						authCredentialsStore.checkTokenCredentialsInDB(tokenCredentials._doc).then(successGet, errorGet);
 					}
 				}
 			});

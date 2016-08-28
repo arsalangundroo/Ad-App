@@ -24,6 +24,16 @@ mongoose.connect(connectionString);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 sellerRoutes.use(function(req, res, next) {
   // check header or url parameters or post parameters for token
@@ -44,7 +54,9 @@ sellerRoutes.use(function(req, res, next) {
     }, function(error, response, body) {
       if (!error && response.statusCode === 200) {
         console.log(body)
-        if (body.authenticity && body.authenticity === true) {
+        if (body.authentication && body.authentication.valid === true) {
+          req.body.accountId = body.authentication.accountId;
+          console.log("Authenticated!!!!!!!!!!!!");
           next();
         } else {
           res.status(403);
@@ -115,16 +127,6 @@ customerRoutes.use(function(req, res, next) {
   }
 });
 
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', defaultRoutes);
 app.use('/users', users);

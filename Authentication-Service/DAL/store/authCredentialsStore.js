@@ -1,4 +1,5 @@
 var AuthCredentials = require('../models/authCredentials.js');
+var ObjectId = (require('mongoose').Types.ObjectId);
 
 function getAuthCredentialsForLogin(loginCredentials, options) {
 
@@ -27,19 +28,18 @@ function getAuthCredentialsForLogin(loginCredentials, options) {
 
 function checkTokenCredentialsInDB(tokenCredentials, options) {
 	var promise = new Promise(
-
 		function(resolve, reject) {
 			//TODO: use projection exclude password and create-date					
 			AuthCredentials.findOne({
-					_id: tokenCredentials._id,
-					email: tokenCredentials.email,
-					role: tokenCredentials.role
+					_id: new ObjectId(tokenCredentials._id),
+					email : tokenCredentials.email,
+					role : tokenCredentials.role
 				},
 				function(err, credentials) {
 					if (err) {
 						reject(err);
 					} else if (credentials) {
-						resolve(true);
+						resolve({accountId:credentials._id, valid:true});
 					} else {
 						reject({
 							message: 'Authentication Failed!!'
